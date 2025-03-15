@@ -7,6 +7,8 @@
     android:padding="16dp">
 
     <!-- Название приложения в верхнем левом углу -->
+
+    <!-- Логотип приложения (отображается в центре) -->
     <TextView
         android:id="@+id/tvAppName"
         android:layout_width="wrap_content"
@@ -14,10 +16,9 @@
         android:text="@string/app_name"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Логотип приложения (отображается в центре) -->
     <ImageView
         android:id="@+id/ivLogo"
         android:layout_width="150dp"
