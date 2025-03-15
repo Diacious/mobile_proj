@@ -6,40 +6,102 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <!-- Заголовок "Регистрация" -->
+    <TextView
+        android:id="@+id/tvRegisterTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Создать аккаунт"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp"/>
+
+    <!-- Метка для Фамилии -->
+    <TextView
+        android:id="@+id/tvLastNameLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Фамилия"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/tvRegisterTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
+
     <!-- Поле ввода фамилии -->
     <EditText
         android:id="@+id/etLastName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Фамилия"
+        android:hint="Введите фамилию"
         android:inputType="textPersonName"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLastNameLabel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="2dp"/>
+
+    <!-- Метка для Имени -->
+    <TextView
+        android:id="@+id/tvFirstNameLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Имя"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/etLastName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
 
     <!-- Поле ввода имени -->
     <EditText
         android:id="@+id/etFirstName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Имя"
+        android:hint="Введите имя"
         android:inputType="textPersonName"
-        app:layout_constraintTop_toBottomOf="@id/etLastName"
+        app:layout_constraintTop_toBottomOf="@id/tvFirstNameLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="2dp"/>
+
+    <!-- Метка для Имени -->
+    <TextView
+        android:id="@+id/tvMiddleNameLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Отчество"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/etFirstName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
 
     <!-- Поле ввода отчества -->
     <EditText
         android:id="@+id/etMiddleName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Отчество (необязательно)"
+        android:hint="Введите отчество"
         android:inputType="textPersonName"
-        app:layout_constraintTop_toBottomOf="@id/etFirstName"
+        app:layout_constraintTop_toBottomOf="@id/tvMiddleNameLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="2dp"/>
+
+    <!-- Метка для Даты Рождения -->
+    <TextView
+        android:id="@+id/tvBirthDateLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Дата рождения"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/etMiddleName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
 
     <!-- Поле ввода даты рождения -->
     <EditText
@@ -48,10 +110,10 @@
         android:layout_height="wrap_content"
         android:hint="Дата рождения (MM/DD/YYYY)"
         android:inputType="date"
-        app:layout_constraintTop_toBottomOf="@id/etMiddleName"
+        app:layout_constraintTop_toBottomOf="@id/tvBirthDateLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="2dp"/>
 
     <!-- Радио-группа для выбора пола -->
     <RadioGroup
