@@ -2,6 +2,7 @@ package com.example.myapplication.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.myapplication.data.entities.UserRegistrationData
 
 /**
  * AuthRepository - управляет хранением токена и проверкой аутентификации.
@@ -17,6 +18,16 @@ class AuthRepository(context: Context) {
 
     fun saveToken(token: String) {
         prefs.edit().putString("access_token", token).apply()
+    }
+
+    // Дополнительные методы для работы с данными пользователя, если потребуется
+    fun saveEmail(email: String) {
+        // Пример сохранения дополнительных данных пользователя
+        prefs.edit().putString("user_email", email).apply()
+    }
+
+    fun clearEmail() {
+        prefs.edit().remove("user_email").apply()
     }
 
     fun clearToken() {

@@ -56,7 +56,10 @@ class RegisterActivity : AppCompatActivity() {
             }
             // Если все поля валидны, переходим к следующему этапу регистрации.
             // Создаём Intent для запуска экрана RegistrationStep2Activity.
-            val intent = Intent(this, RegistrationStep2Activity::class.java)
+            val intent = Intent(this, RegistrationStep2Activity::class.java).apply {
+                putExtra("email", binding.etEmail.text.toString().trim())
+                putExtra("password", binding.etPassword.text.toString())
+            }
             startActivity(intent)
             // При необходимости можно завершить текущую активность:
             // finish()

@@ -12,6 +12,8 @@ import com.example.myapplication.ui.main.MainActivity
 import com.example.myapplication.ui.register.RegisterActivity
 import com.example.myapplication.data.AuthRepository
 import com.google.android.material.snackbar.Snackbar
+import com.example.myapplication.data.repository.UserRepository
+import com.example.myapplication.data.db.AppDatabase
 
 /**
  * LoginActivity - экран входа в аккаунт.
@@ -22,7 +24,9 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var authRepository: AuthRepository
-    private val viewModel by lazy { LoginViewModel(authRepository) }
+    //private val viewModel by lazy { LoginViewModel(authRepository) }
+    private lateinit var userRepository: UserRepository
+    private val viewModel by lazy { LoginViewModel(userRepository) }
 
     // Флаг, показывающий состояние видимости пароля
     private var isPasswordVisible = false
@@ -32,6 +36,10 @@ class LoginActivity : AppCompatActivity() {
         // Инициализация ViewBinding
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Инициализация UserRepository через базу Room:
+        val dao = AppDatabase.getDatabase(applicationContext).userRegistrationDao()
+        userRepository = UserRepository(dao)
 
         // Инициализация репозитория авторизации с передачей контекста
         authRepository = AuthRepository(applicationContext)
@@ -72,11 +80,11 @@ class LoginActivity : AppCompatActivity() {
                 Snackbar.make(binding.root, "Введите корректную электронную почту", Snackbar.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            // Отправляем запрос на авторизацию (симуляция)
+            // Отправляем запрос на авторизацию
             viewModel.login(email, password) { success, token, errorMsg ->
                 if (success) {
-                    // Сохраняем токен через AuthRepository
-                    authRepository.saveToken(token ?: "")
+                    // Сохраняем почту через AuthRepository
+                    authRepository.saveEmail(email)
                     // Переходим на главный экран
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()

@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.register
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -10,7 +11,9 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.example.myapplication.R
-import com.example.myapplication.ui.main.MainActivity
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 /**
  * RegistrationStep2Activity — экран для ввода дополнительных данных.
@@ -50,11 +53,30 @@ class RegistrationStep2Activity : AppCompatActivity() {
             updateNextButtonState()
         }
 
+        // Обработка нажатия на поле даты рождения
+        etBirthDate.setOnClickListener { showDatePickerDialog() }
+        etBirthDate.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) showDatePickerDialog()
+        }
+
         // Обработка нажатия кнопки "Далее"
         btnNext.setOnClickListener {
             if (validateInput()) {
+                val email = intent.getStringExtra("email")
+                val password = intent.getStringExtra("password")
+                val registrationDataStep2 = Bundle().apply {
+                    putString("email", email)
+                    putString("password", password)
+                    putString("lastName", etLastName.text.toString().trim())
+                    putString("firstName", etFirstName.text.toString().trim())
+                    putString("middleName", etMiddleName.text.toString().trim())
+                    putString("birthDate", etBirthDate.text.toString().trim())
+                    putString("gender", if (rgGender.checkedRadioButtonId == R.id.rbMale) "Мужской" else "Женский")
+                }
+
                 // Если данные валидны, завершаем регистрацию и переходим на главный экран
                 val intent = Intent(this, RegistrationStep3Activity::class.java)
+                intent.putExtras(registrationDataStep2)
                 startActivity(intent)
                 finish()
             }
@@ -65,6 +87,24 @@ class RegistrationStep2Activity : AppCompatActivity() {
             // Возвращаемся к предыдущему экрану регистрации
             finish()
         }
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            calendar.set(year, month, dayOfMonth)
+            val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+            etBirthDate.setText(dateFormat.format(calendar.time))
+        }
+
+        val datePickerDialog = DatePickerDialog(
+            this,
+            dateSetListener,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
     }
 
     // Текстовый слушатель для обновления состояния кнопки "Далее"

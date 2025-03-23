@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.register
 
+import android.app.DatePickerDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,11 +12,20 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.example.myapplication.R
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import com.example.myapplication.data.entities.UserRegistrationData
+import androidx.activity.result.contract.ActivityResultContracts
+import com.example.myapplication.databinding.ActivityRegistrationStep3Binding
+import androidx.activity.result.ActivityResultLauncher
 
 /**
  * RegistrationStep3Activity — экран для загрузки документов и фото пользователя.
  */
 class RegistrationStep3Activity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityRegistrationStep3Binding
 
     private lateinit var ivProfilePicture: ImageView
     private lateinit var etLicenseNumber: EditText
@@ -27,10 +38,61 @@ class RegistrationStep3Activity : AppCompatActivity() {
     // Флаги, показывающие, что фото успешно выбраны (лицевой и паспорта)
     private var isLicensePhotoUploaded = false
     private var isPassportPhotoUploaded = false
+    private var isPhotoUploaded = false
+
+    // Можно сохранить выбранные Uri, если нужно их использовать далее
+    private var licensePhotoUri: Uri? = null
+    private var passportPhotoUri: Uri? = null
+    private var photoUri: Uri? = null
+
+    // Лончеры объявим как lateinit и инициализируем в onCreate
+    private lateinit var profileImagePickerLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var licenseImagePickerLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var passportImagePickerLauncher: ActivityResultLauncher<Array<String>>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_registration_step3)
+        //setContentView(R.layout.activity_registration_step3)
+        binding = ActivityRegistrationStep3Binding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // Инициализация лончеров после установки binding
+        profileImagePickerLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            uri?.let {
+                // Сохраняем доступ на чтение выбранного файла
+                val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                contentResolver.takePersistableUriPermission(it, takeFlags)
+                photoUri = it
+                isPhotoUploaded = true
+                binding.ivProfilePicture.setImageURI(it)
+                Snackbar.make(binding.root, "Фото профиля загружено.", Snackbar.LENGTH_SHORT).show()
+                updateNextButtonState()
+            } ?: Snackbar.make(binding.root, "Фотография не выбрана.", Snackbar.LENGTH_SHORT).show()
+        }
+
+        licenseImagePickerLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            uri?.let {
+                val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                contentResolver.takePersistableUriPermission(it, takeFlags)
+                licensePhotoUri = it
+                isLicensePhotoUploaded = true
+                Snackbar.make(binding.root, "Фото водительского удостоверения загружено.", Snackbar.LENGTH_SHORT).show()
+                updateNextButtonState()
+            } ?: Snackbar.make(binding.root, "Фотография не выбрана.", Snackbar.LENGTH_SHORT).show()
+        }
+
+        passportImagePickerLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            uri?.let {
+                val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                contentResolver.takePersistableUriPermission(it, takeFlags)
+                passportPhotoUri = it
+                isPassportPhotoUploaded = true
+                Snackbar.make(binding.root, "Фото паспорта загружено.", Snackbar.LENGTH_SHORT).show()
+                updateNextButtonState()
+            } ?: Snackbar.make(binding.root, "Фотография не выбрана.", Snackbar.LENGTH_SHORT).show()
+        }
+
 
         // Инициализация View
         ivProfilePicture = findViewById(R.id.ivProfilePicture)
@@ -48,34 +110,78 @@ class RegistrationStep3Activity : AppCompatActivity() {
         etLicenseNumber.addTextChangedListener(textWatcher)
         etIssueDate.addTextChangedListener(textWatcher)
 
+        // Обработка нажатия на поле даты рождения
+        etIssueDate.setOnClickListener { showDatePickerDialog() }
+        etIssueDate.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) showDatePickerDialog()
+        }
+
         // Обработка нажатия на иконку фото профиля (опционально)
         ivProfilePicture.setOnClickListener {
             // TODO: Реализуйте открытие галереи или камеры для выбора фото профиля.
+            //openGalleryForImage(REQUEST_CODE_PHOTO)
+            profileImagePickerLauncher.launch(arrayOf("image/*"))
         }
 
         // Обработка нажатия на кнопку "Загрузить фото" для водительского удостоверения
         btnUploadLicense.setOnClickListener {
             // TODO: Реализуйте открытие галереи или камеры для загрузки фото водительского удостоверения.
             // После успешного выбора фото:
-            isLicensePhotoUploaded = true
-            updateNextButtonState()
+            //isLicensePhotoUploaded = true
+            //updateNextButtonState()
+            //openGalleryForImage(REQUEST_CODE_LICENSE)
+            licenseImagePickerLauncher.launch(arrayOf("image/*"))
         }
 
         // Обработка нажатия на кнопку "Загрузить фото" для паспорта
         btnUploadPassport.setOnClickListener {
             // TODO: Реализуйте открытие галереи или камеры для загрузки фото паспорта.
             // После успешного выбора фото:
-            isPassportPhotoUploaded = true
-            updateNextButtonState()
+            //isPassportPhotoUploaded = true
+            //updateNextButtonState()
+            //openGalleryForImage(REQUEST_CODE_PASSPORT)
+            passportImagePickerLauncher.launch(arrayOf("image/*"))
         }
 
         // Обработка нажатия кнопки "Далее"
         btnNext.setOnClickListener {
             if (validateInput()) {
-                // Если данные валидны, завершаем регистрацию и переходим на экран "Успешная регистрация"
-                val intent = Intent(this, SuccessActivity::class.java)
-                startActivity(intent)
-                finish()
+                val extras = intent.extras
+                val userData = UserRegistrationData(
+                    email = extras?.getString("email") ?: "",
+                    password = extras?.getString("password") ?: "",
+                    lastName = extras?.getString("lastName") ?: "",
+                    firstName = extras?.getString("firstName") ?: "",
+                    middleName = extras?.getString("middleName"),
+                    birthDate = extras?.getString("birthDate") ?: "",
+                    gender = extras?.getString("gender") ?: "",
+                    licenseNumber = etLicenseNumber.text.toString().trim(),
+                    issueDate = etIssueDate.text.toString().trim(),
+                    licensePhotoUri = licensePhotoUri.toString(),
+                    passportPhotoUri = passportPhotoUri.toString(),
+                    profilePhotoUri = photoUri?.toString()
+                )
+
+                val email = intent.getStringExtra("email")
+                val registrationDataStep3 = Bundle().apply {
+                    putString("email", email)
+                }
+
+                // Здесь вызывается ViewModel для сохранения данных
+                val registrationViewModel = RegistrationViewModel(applicationContext)
+                registrationViewModel.saveRegistrationData(userData) { success ->
+                    if (success) {
+                        // Переход на главный экран или экран успешной регистрации
+                        val intent = Intent(this, SuccessActivity::class.java)
+                        intent.putExtra("email", extras?.getString("email") ?: "dima@mail.ru")
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Snackbar.make(findViewById(android.R.id.content),
+                            "Ошибка при сохранении данных регистрации.",
+                            Snackbar.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
 
@@ -84,6 +190,24 @@ class RegistrationStep3Activity : AppCompatActivity() {
             // Возврат на предыдущий экран регистрации (шаг 2)
             finish()
         }
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            calendar.set(year, month, dayOfMonth)
+            val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+            etIssueDate.setText(dateFormat.format(calendar.time))
+        }
+
+        val datePickerDialog = DatePickerDialog(
+            this,
+            dateSetListener,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
     }
 
     // Слушатель изменений текста для обновления состояния кнопки "Далее"

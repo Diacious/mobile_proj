@@ -1,13 +1,14 @@
 package com.example.myapplication.ui.login
 
 import com.example.myapplication.data.AuthRepository
+import com.example.myapplication.data.repository.UserRepository
 import kotlinx.coroutines.*
 
 /**
  * LoginViewModel - отвечает за логику авторизации.
  * Здесь реализована симуляция запроса на сервер для авторизации.
  */
-class LoginViewModel(private val authRepository: AuthRepository) {
+class LoginViewModel(private val userRepository: UserRepository) {
 
     // Можно использовать CoroutineScope для асинхронных операций
     private val viewModelScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -18,7 +19,7 @@ class LoginViewModel(private val authRepository: AuthRepository) {
      * @param password пароль
      * @param callback результат авторизации: success, токен и сообщение об ошибке
      */
-    fun login(email: String, password: String, callback: (Boolean, String?, String?) -> Unit) {
+    /*fun login(email: String, password: String, callback: (Boolean, String?, String?) -> Unit) {
         viewModelScope.launch {
             // Симуляция задержки запроса к серверу
             delay(1500)
@@ -27,6 +28,25 @@ class LoginViewModel(private val authRepository: AuthRepository) {
                 callback(true, "fake_token_123456", null)
             } else {
                 callback(false, null, "Неверные учетные данные")
+            }
+        }
+    }*/
+    fun login(email: String, password: String, callback: (Boolean, String?, String?) -> Unit) {
+        viewModelScope.launch {
+            // Запрашиваем пользователя по email из базы данных
+            val user = userRepository.getUserByEmail(email)
+            if (user == null) {
+                // Пользователь не найден
+                callback(false, null, "Пользователь с таким email не найден")
+                return@launch
+            }
+            // Если пользователь найден, сравниваем пароли
+            if (user.password != password) {
+                // Пароли не совпадают
+                callback(false, null, "Неверный пароль")
+            } else {
+                // Авторизация успешна – возвращаем, например, токен
+                callback(true, "fake_token_123456", null)
             }
         }
     }

@@ -52,7 +52,7 @@
         android:id="@+id/tvCongratulations"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Вы успешно зарегистрировались.  Обработка ваших персональных данных займет около двух часов. Спасибо за ожидание."
+        android:text="Вы успешно зарегистрировались. Обработка ваших персональных данных займет около двух часов. Спасибо за ожидание."
         android:textSize="18sp"
         android:textColor="#1A1A1A"
         android:textAlignment="center"
