@@ -15,6 +15,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.example.myapplication.ui.details.CarDetailsActivity
+import com.example.myapplication.ui.rental.RentCarActivity
 
 class SearchResultsActivity : AppCompatActivity() {
 
@@ -45,11 +47,16 @@ class SearchResultsActivity : AppCompatActivity() {
             when (action) {
                 CarAdapter.Action.BOOK -> {
                     // Переход на экран "Оформление аренды"
-                    // Здесь добавьте нужную логику
+                    // Переход на экран "Детали"
+                    val intent = Intent(this, RentCarActivity::class.java)
+                    intent.putExtra("car_id", car.id) // передаем ID авто
+                    startActivity(intent)
                 }
                 CarAdapter.Action.DETAILS -> {
                     // Переход на экран "Детали"
-                    // Здесь добавьте нужную логику
+                    val intent = Intent(this, CarDetailsActivity::class.java)
+                    intent.putExtra("car_id", car.id) // передаем ID авто
+                    startActivity(intent)
                 }
             }
         }

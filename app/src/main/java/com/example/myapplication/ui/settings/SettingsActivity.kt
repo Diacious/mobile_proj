@@ -16,6 +16,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.net.Uri
+import com.example.myapplication.ui.bookings.MyBookingsActivity
+import com.example.myapplication.ui.favorite.FavoriteActivity
 
 /**
  * SettingsActivity - экран настроек пользователя.
@@ -79,7 +81,9 @@ class SettingsActivity : AppCompatActivity() {
         binding.tvMyBookings.setOnClickListener {
             // TODO: Релизовать переход на мои "Мои бронирования" (когда создам сам экран)
             //startActivity(Intent(this, MyBookingsActivity::class.java))
-            Snackbar.make(binding.root, "Мои бронирования", Snackbar.LENGTH_SHORT).show()
+            //Snackbar.make(binding.root, "Мои бронирования", Snackbar.LENGTH_SHORT).show()
+            val intent = Intent(this, MyBookingsActivity::class.java)
+            startActivity(intent)
         }
 
         // Пункт "Тема" — здесь можно открыть диалог выбора темы или отдельный экран
@@ -115,10 +119,10 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
         binding.btnFavorites.setOnClickListener {
-            // TODO: Сделать потом экран избранное
-            //startActivity(Intent(this, FavoritesActivity::class.java))
-            //finish()
-            Snackbar.make(binding.root, "Избранное", Snackbar.LENGTH_SHORT).show()
+            // Переход на экран избранное
+            startActivity(Intent(this, FavoriteActivity::class.java))
+            finish()
+            //Snackbar.make(binding.root, "Избранное", Snackbar.LENGTH_SHORT).show()
         }
         binding.btnSettings.setOnClickListener {
             // Так как мы уже на экране настроек, можно оставить пустым или просто показать Snackbar.

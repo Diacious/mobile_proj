@@ -18,7 +18,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.example.myapplication.data.db.AppDatabase
+import com.example.myapplication.ui.details.CarDetailsActivity
+import com.example.myapplication.ui.rental.RentCarActivity
 import com.example.myapplication.ui.settings.SettingsActivity
+import com.example.myapplication.ui.favorite.FavoriteActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,7 +47,10 @@ class MainActivity : AppCompatActivity() {
                     //startActivity(Intent(this, RentCarActivity::class.java).apply {
                     //    putExtra("car_id", car.id)
                     //})
-                    Snackbar.make(binding.root, "Оформление аренды", Snackbar.LENGTH_SHORT).show()
+                    //Snackbar.make(binding.root, "Оформление аренды", Snackbar.LENGTH_SHORT).show()
+                    val intent = Intent(this, RentCarActivity::class.java)
+                    intent.putExtra("car_id", car.id) // передаем ID авто
+                    startActivity(intent)
                 }
                 CarAdapter.Action.DETAILS -> {
                     // TODO: Сделать экран "Детали"
@@ -52,7 +58,10 @@ class MainActivity : AppCompatActivity() {
                     //startActivity(Intent(this, CarDetailsActivity::class.java).apply {
                     //    putExtra("car_id", car.id)
                     //})
-                    Snackbar.make(binding.root, "Детали", Snackbar.LENGTH_SHORT).show()
+                    //Snackbar.make(binding.root, "Детали", Snackbar.LENGTH_SHORT).show()
+                    val intent = Intent(this, CarDetailsActivity::class.java)
+                    intent.putExtra("car_id", car.id) // передаем ID авто
+                    startActivity(intent)
                 }
             }
         }
@@ -90,9 +99,9 @@ class MainActivity : AppCompatActivity() {
         }
         binding.btnFavorites.setOnClickListener {
             // TODO: Сделать потом экран избранное
-            //startActivity(Intent(this, FavoritesActivity::class.java))
-            //finish()
-            Snackbar.make(binding.root, "Избранное", Snackbar.LENGTH_SHORT).show()
+            startActivity(Intent(this, FavoriteActivity::class.java))
+            finish()
+            //Snackbar.make(binding.root, "Избранное", Snackbar.LENGTH_SHORT).show()
         }
         binding.btnSettings.setOnClickListener {
             // Так как мы уже на экране настроек, можно оставить пустым или просто показать Snackbar.

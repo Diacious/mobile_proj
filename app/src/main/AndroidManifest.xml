@@ -64,6 +64,24 @@
 
         <!-- Экран Поиска -->
         <activity android:name=".ui.search.SearchResultsActivity"/>
+
+        <!-- Экран Детали -->
+        <activity android:name=".ui.details.CarDetailsActivity"/>
+
+        <!-- Экран Оформления Аренды -->
+        <activity android:name=".ui.rental.RentCarActivity"/>
+
+        <!-- Экран Успешного оформления аренды -->
+        <activity android:name=".ui.rental.SuccessBookingActivity"/>
+
+        <!-- Экран Мои бронирования -->
+        <activity android:name=".ui.bookings.MyBookingsActivity"/>
+
+        <!-- Экран Детальная информация о бронировании -->
+        <activity android:name=".ui.bookings.BookingDetailsActivity"/>
+
+        <!-- Экран Избранное -->
+        <activity android:name=".ui.favorite.FavoriteActivity"/>
     </application>
 
 </manifest>

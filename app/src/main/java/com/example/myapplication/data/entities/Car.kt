@@ -12,5 +12,6 @@ data class Car(
     val brand: String,          // Марка автомобиля
     val pricePerHour: Double,   // Цена за час аренды
     val fuelType: String,       // Тип топлива: "Дизель" или "Бензин"
-    val transmissionType: String // Тип передач: "А/Т" (автомат) или "М/К" (механика)
+    val transmissionType: String, // Тип передач: "А/Т" (автомат) или "М/К" (механика)
+    val isFavorite: Boolean = false // Новое поле, отвечающее за избранность
 )
